@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Generating list - Tranco</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css"
+          integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
+    <div class="container">
+        <a class="navbar-brand" href="#">Tranco: An improved top websites ranking</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/#download">Download</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/configure">Configure</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/methodology">Methodology</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/#aboutus">About us</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="py-3">
+
+<h2>Generating list</h2>
+    </div>
+    <div>
+<p>We are generating the list you have requested. The list will have as its ID {{ list_id }} and will be retrievable at <a href="/list/{{ list_id }}/{{ list_size }}">https://tranco-list.eu/list/{{ list_id }}/{{ list_size }}</a>.</p>
+<p>There are currently <span id="remaining_jobs">an unknown number of lists</span> ahead of your list waiting to be created. You will automatically be redirected to the download page once the list has been created.</p>
+<p>Alternatively, you can be notified by email when your list has been generated, by entering your email address here:</p>
+<form class="form-inline" method="POST" action="notify_email">
+      <div class="form-group mr-sm-3 mb-2 w-50">
+          <input type="email" class="form-control w-100" name="email" placeholder="Email address" required title="Email address">
+      </div>
+    <input type="hidden" name="list_id" value="{{ list_id }}">
+    <input type="hidden" name="list_size" value="{{ list_size }}">
+    <button type="submit" class="btn btn-primary mb-2">Submit</button>
+</form>
+</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"
+        integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
+        crossorigin="anonymous"></script>
+<script>
+    let rj = document.getElementById("remaining_jobs");
+    function update_remaining_jobs() {
+        fetch('/generate_list/{{ list_id }}')
+            .then(function(response) {
+                return response.json();
+            }).then(function(body) {
+                console.log(body);
+                if (body.completed === true) {
+                    if (body.success === true) {
+                        window.location.replace("/list/{{ list_id }}/{{ list_size }}");
+                    } else {
+                        window.location.replace("/failure");
+                    }
+                } else {
+                    rj.innerText = body.jobs_ahead + " list" + ((body.jobs_ahead !== 1) ? "s" : "");
+                }
+        })
+    }
+    update_remaining_jobs();
+    setInterval(update_remaining_jobs, 5000);
+</script>
+</body>
+</html>

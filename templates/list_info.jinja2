@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Information on list with ID {{ list_id }} - Tranco</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+<link href="/assets/style.css" rel="stylesheet">
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
+    <div class="container">
+        <a class="navbar-brand" href="#">Tranco: An improved top websites ranking</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/#download">Download</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/configure">Configure</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/methodology">Methodology</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/#aboutus">About us</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="py-3">
+        <h2>Information on the list with ID <span class="text-monospace">{{ list_id }}</span> <a class="btn btn-primary btn-lg float-right" href="/download/{{ list_id }}/{{ list_size }}">Download list</a></h2>
+    </div>
+<h4>Composition</h4>
+<p>This list combines the lists provided by
+    <b>{% for provider in providers %}{{ provider|title }}{%- if not loop.last %}, {% endif %}{% endfor %}</b> from {{ startDate }}
+    to {{ endDate }} (<b>{{ nbDays }} days</b>). <a href="/methodology">Read more</a> on the methods used to compose each of these lists to understand each list's properties and potential shortcomings.</p>
+<p>These lists were combined using the
+    {% if combinationMethod == 'borda' %}
+        <b><a href="https://en.wikipedia.org/wiki/Borda_count#Borda's_system_(starting_at_1)">Borda count</a></b> (the first domain gets N points, the second N-1, ..., the last 1 point and unranked domains 0 points).
+    {% elif combinationMethod == 'dowdall' %}
+        <b><a href="https://en.wikipedia.org/wiki/Borda_count#Dowdall_system_(Nauru)">Dowdall rule</a></b> (the first domain gets 1 point, the second 1/2 points, ..., the last 1/N points and unranked domains 0 points). This method roughly reflects the observation of <a href="https://en.wikipedia.org/wiki/Zipf%27s_law">Zipf's law</a> and the ''long-tail effect'' in the distribution of website popularity.
+    {% endif %}</p>
+<p>For each list, {% if listPrefix == 'full' %}all{% else %}the {{ listPrefixCustomValue if listPrefix == "custom" else listPrefix }} first{% endif %} domains were used.</p>
+
+{% if inclusionDays or inclusionDays or filterPLD or filterTLD or filterOrganization or filterSubdomain or filterCRUX %}
+<p>The following filters were applied to the domains:</p>
+    <ul>
+        {% if inclusionDays %}<li>Only domains that were present for at least {{ inclusionDaysValue }} days on any of the lists were retained.</li>{% endif %}
+        {% if inclusionLists %}<li>Only domains that were present on at least {{ inclusionListsValue }} lists for any day were retained.</li>{% endif %}
+
+        {% if filterPLD %}<li>Only pay-level domains were retained.</li>{% endif %}
+        {% if filterTLD %}<li>Only domains with one of the following TLDs were retained: {{ filterTLDValue }}.</li>{% endif %}
+        {% if filterOrganization %}<li>Only one domain per organization (i.e. a root pay-level domain) was retained.</li>{% endif %}
+        {% if filterSubdomain %}<li>Only the following subdomains were retained: {{ filterSubdomainValue }}.</li>{% endif %}
+
+        {% if filterCRUX %}<li>Only domains included in the <a href="https://developers.google.com/web/tools/chrome-user-experience-report/">Chrome User Experience Report</a>
+            of ##TODO: show month## were retained.</li>{% endif %}
+    </ul>
+{% endif %}
+
+<p>Of the combined and filtered list, {% if listSizeValue == 'full' %}all{% else %}the {{ listSizeValue }} first{% endif %} domains were used.</p>
+<p>The list was first generated on {{ creationDate }}.</p>
+{#<p>If the list seems incorrect, please create an issue in our <a href="https://github.com/DistriNet/tranco-list">repository</a>.</p>#}
+
+
+<h4>Referencing the list</h4>
+    <p>You can reference the list as follows:</p>
+<div class="card mb-3">
+      <div class="card-header">
+    <ul class="nav nav-tabs card-header-tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="generic-tab" data-toggle="tab" href="#generic" role="tab" aria-controls="generic" aria-selected="true">Generic</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="ieee-tab" data-toggle="tab" href="#ieee" role="tab" aria-controls="ieee" aria-selected="false">IEEE</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="acm-tab" data-toggle="tab" href="#acm" role="tab" aria-controls="acm" aria-selected="false">ACM</a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body tab-content">
+      <div class="tab-pane show active" id="generic" aria-labelledby="generic-tab">The Tranco list, created on {{ creationDate }}, available at <span class="text-monospace">https://tranco-list.eu/list/{{ list_id }}</span>.</div>
+      <div class="tab-pane" id="ieee" role="tabpanel" aria-labelledby="bibtex-tab">V. Le Pochat, T. Van Goethem, S. Tajalizadehkhoob, M. Korczynski, and W. Joosen. (2018) Tranco: An improved top websites ranking. Created on {{ creationDate }}. [Online]. Available: https://tranco-list.eu/list/{{ list_id }}</div>
+        <div class="tab-pane" id="acm" role="tabpanel" aria-labelledby="acm-tab">Victor Le Pochat, Tom Van Goethem, Samaneh Tajalizadehkhoob, Maciej Korczynski, and Wouter Joosen. 2018. Tranco: An improved top websites ranking. Created on {{ creationDate }}. https://tranco-list.eu/list/{{ list_id }}</div>
+  </div>
+</div>
+    <p>We advise you to include a short explanation in your text:</p>
+<div class="card mb-3">
+  <div class="card-body">We used the Tranco list of {% if listSize == 'full' %}all{% else %}the {{ listSizeCustomValue if listSize == "custom" else listSize }} first{% endif %} domains of the aggregation of the {% for provider in providers %}{{ provider|title }}{%- if not loop.last %}, {% endif %}{% endfor %} lists from {{ startDate }} to {{ endDate }} ({{ nbDays }} days).</span>
+  </div>
+</div>
+
+    <p>We request that you cite our publication:</p>
+<div class="card mb-3">
+      <div class="card-header">
+    <ul class="nav nav-tabs card-header-tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="text-tab" data-toggle="tab" href="#text" role="tab" aria-controls="text" aria-selected="true">Text</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="bibtex-tab" data-toggle="tab" href="#bibtex" role="tab" aria-controls="bibtex" aria-selected="false">BibTeX</a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body tab-content">
+            <div class="tab-pane show active" id="text" aria-labelledby="text-tab">Victor Le Pochat, Tom Van Goethem, Samaneh Tajalizadehkhoob, Maciej Korczynski, and Wouter Joosen. 2018. "Rigging Research Results by Manipulating Top Websites Rankings," ArXiv e-prints (1806.01156), Jun 2018. https://arxiv.org/abs/1806.01156
+            </div>
+      <div class="tab-pane" id="bibtex" role="tabpanel" aria-labelledby="bibtex-tab">
+          <pre>{% raw %}@ARTICLE{LePochat2018,
+  author = {{Le Pochat}, Victor and {Van Goethem}, Tom and {Tajalizadehkhoob} Samaneh and {Korczynski}, Maciek and {Joosen}, Wouter},
+   title = "{Rigging Research Results by Manipulating Top Websites Rankings}",
+ journal = {ArXiv e-prints},
+archivePrefix = "arXiv",
+  eprint = {1806.01156},
+    year = 2018,
+   month = jun,
+  url = {https://arxiv.org/abs/1806.01156}
+}{% endraw %}</pre>
+      </div>
+</div>
+  <div class="card-footer">
+      <small><a href="#">Copy BibTeX</a></small>
+  </div>
+</div>
+
+{#<div class="mb-3">#}
+{#<h5>References</h5>#}
+{#<pre>#}
+{#@article{Clauset2009,#}
+{#title={Power-Law Distributions in Empirical Data},#}
+{#author={Clauset, Aaron and Shalizi, Cosma Rohilla and Newman, Mark E. J.},#}
+{#journal={SIAM Review},#}
+{#volume={51},#}
+{#number={4},#}
+{#pages={661--703},#}
+{#year={2009},#}
+{#publisher={SIAM},#}
+{#doi={10.1137/070710111}#}
+{#}#}
+{##}
+{#@article{Adamic2002a,#}
+{#author = {Adamic, Lada A and Huberman, Bernardo A},#}
+{#journal = {Glottometrics},#}
+{#pages = {143--150},#}
+{#title = {Zipf's law and the {Internet}},#}
+{#volume = {3},#}
+{#year = {2002}#}
+{#}#}
+{##}
+{#@ARTICLE{6423193,#}
+{#author={Aniket Mahanti and Niklas Carlsson and Anirban Mahanti and Martin Arlitt and Carey Williamson},#}
+{#journal={IEEE Network},#}
+{#title={A tale of the tails: Power-laws in internet measurements},#}
+{#year={2013},#}
+{#volume={27},#}
+{#number={1},#}
+{#pages={59-64},#}
+{#doi={10.1109/MNET.2013.6423193},#}
+{#ISSN={0890-8044},#}
+{#month={January},}#}
+{#</pre>#}
+{##}
+{#</div>#}
+
+    <div class="mb-3">
+        <h4 id="aboutus">About us</h4>
+        Feel free to contact us regarding our research, the data or this new ranking.
+        <ul>
+            <li>Victor Le Pochat - victor.lepochat@cs.kuleuven.be</li>
+            <li>Tom Van Goethem - tom.vangoethem@cs.kuleuven.be</li>
+            <li>Samaneh Tajalizadehkhoob - S.T.Tajalizadehkhoob@tudelft.nl</li>
+            <li>Maciej Korczynski - maciej.korczynski@univ-grenoble-alpes.fr</li>
+            <li>Wouter Joosen - wouter.joosen@cs.kuleuven.be</li>
+        </ul>
+        <div class="container d-flex justify-content-center">
+            <ul class="list-inline">
+                <li class="list-inline-item"><img width="150" src="/assets/DistriNet.png"></li>
+                <li class="list-inline-item"><img width="150" src="/assets/TUDelft.png"></li>
+                <li class="list-inline-item"><img width="150" src="/assets/LIG.jpg"></li>
+            </ul>
+        </div>
+    </div>
+
+
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
+</body>
+</html>

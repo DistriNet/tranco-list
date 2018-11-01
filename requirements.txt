@@ -1,0 +1,12 @@
+redis
+tldextract
+aiohttp
+aiohttp_jinja2
+jinja2
+rq
+tinydb
+google-cloud
+gglsbl
+hashids
+aiofiles
+aitertools
