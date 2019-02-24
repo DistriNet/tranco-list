@@ -1,8 +1,5 @@
 import csv
-import glob
-import os
 import sys
-from concurrent.futures import ProcessPoolExecutor
 
 import tldextract
 
@@ -25,10 +22,6 @@ def generate_parts_list(input_fp, output_fp):
                 output.writerow([rank, fqdn, pld, sld, subd, ps, tld, is_pld])
 
 if __name__ == '__main__':
-    data_folder = sys.argv[1]
-    pattern = sys.argv[2] if len(sys.argv) > 2 else "*"
-    with ProcessPoolExecutor(max_workers=8) as executor:
-        for fp in glob.glob(os.path.join(data_folder, "source/*/*{}*.csv".format(pattern))):
-            input_fp = fp
-            output_fp = "/".join(fp.split("/")[:-2]) + "/" + fp.split("/")[-2] + "/parts/" + fp.split("/")[-1][:-4] + "_parts.csv"
-            executor.submit(generate_parts_list, input_fp, output_fp)
+    input_fp = sys.argv[1]
+    output_fp = "/".join(input_fp.split("/")[:-1]) + "/parts/" + input_fp.split("/")[-1][:-4] + "_parts.csv"
+    generate_parts_list(input_fp, output_fp)

@@ -1,0 +1,10 @@
+NETAPP_STORAGE_PATH = None  # File-based archive
+MAILGUN_API_KEY = None  # API key for sending email notifications
+TOPLISTS_ARCHIVE_S3_BUCKET = None  # S3 bucket with archived rankings
+TOPLISTS_GENERATED_LIST_S3_BUCKET = None  # S3 bucket with generated lists
+TOPLISTS_DAILY_LIST_S3_BUCKET = None  # S3 bucket with daily default lists
+MONGO_URL = None  # Mongo instance for storing configurations of lists
+USE_S3 = None  # Boolean indicating whether to use AWS services
+GENERATION_REMOTE = None  # Boolean indicating whether list generation is handled remotely
+GENERATION_REMOTE_ENDPOINT = None  # Endpoint accepting list generation jobs
+JOB_SERVER_PORT = None  # Port of server accepting list generation jobs
