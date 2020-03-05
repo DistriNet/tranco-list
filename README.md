@@ -2,7 +2,7 @@
 
 *By Victor Le Pochat, Tom Van Goethem, Samaneh Tajalizadehkhoob, Maciej Korczyński and Wouter Joosen*
 
-This repository contains the source code driving the generation of the Tranco ranking provided at [https://tranco-list.eu/](). This new top websites ranking was proposed in our paper [Tranco: A Research-Oriented Top Sites Ranking Hardened Against Manipulation](https://tranco-list.eu/assets/tranco-ndss19.pdf).
+This repository contains the source code driving the generation of the Tranco ranking provided at [https://tranco-list.eu/](https://tranco-list.eu/). This new top websites ranking was proposed in our paper [Tranco: A Research-Oriented Top Sites Ranking Hardened Against Manipulation](https://tranco-list.eu/assets/tranco-ndss19.pdf).
 
 * `combined_lists.py` contains the core code for generating new lists based on a configuration passed to `combined_lists.generate_combined_list`.
 * `shared.py` and `global_config.py` contain several configuration variables; `shared.DEFAULT_TRANCO_CONFIG` gives the configuration of the default (daily updated) Tranco list.
